@@ -146,6 +146,8 @@
 # define vsnprintf _vsnprintf
 #endif  // GTEST_OS_WINDOWS
 
+#include <boost/exception/diagnostic_information.hpp>
+
 namespace testing {
 
 using internal::CountIf;
@@ -2441,6 +2443,13 @@ Result HandleExceptionsInMethodIfSupported(
       // Test assertion with the intention of letting another testing
       // framework catch it.  Therefore we just re-throw it.
       throw;
+    }
+	catch (const boost::exception &e) {
+		
+		std::string diag = boost::diagnostic_information(e);
+		internal::ReportFailureInUnknownLocation(
+          TestPartResult::kFatalFailure,
+          FormatCxxExceptionMessage(diag.c_str(), location));
     } catch (const std::exception& e) {  // NOLINT
       internal::ReportFailureInUnknownLocation(
           TestPartResult::kFatalFailure,

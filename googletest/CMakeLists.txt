@@ -56,6 +56,11 @@ if (gtest_hide_internal_symbols)
   set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 endif()
 
+find_package(Boost)
+if (NOT Boost_FOUND)
+    message( FATAL_ERROR "Boost not found" )
+endif()
+
 # Define helper functions and macros used by Google Test.
 include(cmake/internal_utils.cmake)
 
